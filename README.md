@@ -1,2 +1,5 @@
-# ionix_app
-Ejercicio de prueba con AdonisJs y ReactJS
+# Adonis API rest con JWT
+
+
+Link a la Documentacion ......
+```
