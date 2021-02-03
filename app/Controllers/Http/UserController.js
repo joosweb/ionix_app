@@ -5,10 +5,19 @@ const Token  = use('App/Models/Token')
 
 class UserController {
 
-  async login({ request, auth}) {
-    const { email, password } = request.all()
-    const token = await auth.attempt(email,password)
-    return await auth.withRefreshToken().attempt(email, password)
+  async login({ request, auth, response}) {
+    const email = request.input("email")
+    const password = request.input("password");
+    try {
+      if (await auth.attempt(email, password)) {
+      let user = await User.findBy('email', email)
+      let accessToken = await auth.generate(user)
+      return response.json({"user":user, "access_token": accessToken})
+      }
+    }
+    catch (e) {
+      return response.json({message: 'You first need to register!'})
+    }
   }
 
   async logout({ request, auth, response}) {
@@ -38,25 +47,20 @@ class UserController {
   async create ({ request, response, view }) {
   }
 
-  async store ({ request, response }) {
-     try {
-       //await auth.getUser()
-       const { username, email, password } = request.all();
-       const user = await User.create({
-          username,
-          email,
-          password,
-       });
-       return this.login(...arguments)
-     } catch (e) {
-       return response.json({message: error.message})
-     }
+  async store ({ request, response, auth }) {
+    // get the user data from the request
+    const { username, email, password } = request.all()
+    const user = await User.create({ username, email, password })
+    // generate the jwt for the user
+    const token = await auth.generate(user)
+    return response.ok({ user, token })
   }
+
 
 
   async show ({ params, request, response, auth }) {
     try {
-      await auth.getUser()
+      //await auth.getUser()
       const user = await User.find(params.id)
       return user
     } catch (error) {
