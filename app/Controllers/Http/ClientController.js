@@ -10,8 +10,8 @@ class ClientController {
           await auth.getUser()
           const page = request.input('page', 1)
           const limit = 10
-          const clients = await Client.query().paginate(page, limit)
-          return clients;
+          const clients = await Client.all()
+          return response.json(clients);
         } catch (error) {
           return response.json({message: error.message})
       }
