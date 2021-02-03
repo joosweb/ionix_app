@@ -15,7 +15,7 @@ test('Iniciar Sesión y obtener el token',  async  ({ assert, client })  =>  {
   await User.create({
     username, email, password
   })
-    
+
   // crear una peticion post a la ruta login con el usuario
   const response =  await client.post('/login').send({
     email, password
@@ -58,8 +58,12 @@ test('Crear un nuevo Usuario',  async  ({ assert, client })  =>  {
 test('Mostrar un Usuario',  async  ({ assert, client })  =>  {
   // generate a fake user
   const  { username, email, password }  =  await Factory.model('App/Models/User').make()
+  // salvar el usuario fake a la base de datos
+  const newUser = await User.create({
+    username, email, password
+  })
   // make api request to register a new user
-  const response =  await client.get('/users/2').send().end()
+  const response =  await client.get('/users/'+newUser.id).send().end()
   // expect the status code to be 200
   response.assertStatus(200)
 })
@@ -68,8 +72,12 @@ test('Mostrar un Usuario',  async  ({ assert, client })  =>  {
 test('Editar un Usuario',  async  ({ assert, client })  =>  {
   // generate a fake user
   const  { username, email, password }  =  await Factory.model('App/Models/User').make()
+
+  const newUser = await User.create({
+    username, email, password
+  })
   // make api request to register a new user
-  const response =  await client.put('/users/1').send({
+  const response =  await client.put('/users/'+newUser.id).send({
     username,
     email,
     password
@@ -86,8 +94,11 @@ test('Editar un Usuario',  async  ({ assert, client })  =>  {
 test('Eliminar un Usuario',  async  ({ assert, client })  =>  {
   // generate a fake user
   const  { username, email, password }  =  await Factory.model('App/Models/User').make()
+  const newUser = await User.create({
+    username, email, password
+  })
   // make api request to register a new user
-  const response =  await client.delete('/users/3').end()
+  const response =  await client.delete('/users/'+newUser.id).end()
   // expect the status code to be 200
   response.assertStatus(200)
   // assert the message and username are in the response body

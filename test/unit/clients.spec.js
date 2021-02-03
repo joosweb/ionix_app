@@ -36,28 +36,33 @@ test('Crear un nuevo Cliente',  async  ({ assert, client })  =>  {
 test('Mostrar un Cliente',  async  ({ assert, client })  =>  {
   // generate a fake user
   const  { username, email, password }  =  await Factory.model('App/Models/Client').make()
-  const user = await Factory.model('App/Models/User').create()
+  const newUser = await Client.create({
+    username, email, password
+  })
   // make api request to register a new user
-  const response =  await client.get('/clients/2').loginVia(user, 'jwt').end()
+  const response =  await client.get('/clients/'+newUser.id).loginVia(newUser, 'jwt').end()
   // expect the status code to be 200
   response.assertStatus(200)
   response.assertJSONSubset({
-    id: 2
+    id: newUser.id
   })
 })
 
 // Editar Usuario
-    test('Editar un Cliente',  async  ({ assert, client })  =>  {
+test('Editar un Cliente',  async  ({ assert, client })  =>  {
   // generate a fake user
   const  { username, email, password }  =  await Factory.model('App/Models/Client').make()
-  // make api request to register a new user
-  const user = await Factory.model('App/Models/User').create()
-  const response =  await client.put('/clients/1').send({
+
+  const newUser = await Client.create({
+    username, email, password
+  })
+
+  const response =  await client.put('/clients/'+newUser.id).send({
     username,
     email,
     password
   })
-  .loginVia(user, 'jwt')
+  .loginVia(newUser, 'jwt')
   .end()
 
   // expect the status code to be 200
@@ -72,9 +77,12 @@ test('Mostrar un Cliente',  async  ({ assert, client })  =>  {
 test('Eliminar un Cliente',  async  ({ assert, client })  =>  {
   // generate a fake user
   const  { username, email, password }  =  await Factory.model('App/Models/Client').make()
-  const user = await Factory.model('App/Models/User').create()
+
+  const newUser = await Client.create({
+    username, email, password
+  })
   // make api request to register a new user
-  const response =  await client.delete('/clients/3').loginVia(user, 'jwt').end()
+  const response =  await client.delete('/clients/'+newUser.id).loginVia(newUser, 'jwt').end()
   // expect the status code to be 200
   response.assertStatus(200)
   // assert the message and username are in the response body
