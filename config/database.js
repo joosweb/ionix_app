@@ -6,8 +6,8 @@ const Env = use('Env')
 /** @type {import('@adonisjs/ignitor/src/Helpers')} */
 const Helpers = use('Helpers')
 
-const URL = require("url-parse");
-const PROD_MYSQL_DB = new URL(Env.get("CLEARDB_DATABASE_URL"));
+const Url = require('url-parse')
+const CLEARDB_DATABASE_URL = new Url(Env.get('CLEARDB_DATABASE_URL'))
 
 module.exports = {
   /*
@@ -51,6 +51,22 @@ module.exports = {
   | npm i --save mysql
   |
   */
+  // heroku
+
+  mysql: {
+    client: 'mysql',
+    connection: {
+        host: Env.get('DB_HOST', CLEARDB_DATABASE_URL.host),
+        port: Env.get('DB_PORT', ''),
+        user: Env.get('DB_USER', CLEARDB_DATABASE_URL.username),
+        password: Env.get('DB_PASSWORD', CLEARDB_DATABASE_URL.password),
+        database: Env.get('DB_DATABASE', CLEARDB_DATABASE_URL.pathname.substr(1))
+    },
+    debug: Env.get('DB_DEBUG', false)
+  },
+
+  /*
+  // localhost
   mysql: {
     client: 'mysql',
     connection: {
@@ -62,7 +78,7 @@ module.exports = {
     },
     debug: Env.get('DB_DEBUG', false)
   },
-
+  */
   /*
   |--------------------------------------------------------------------------
   | PostgreSQL
