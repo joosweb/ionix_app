@@ -75,7 +75,7 @@ class ClientController {
       if(user) {
         await user.delete()
       }
-      return response.json({message: 'User deleted!'})
+      return response.json({message: 'Client deleted!'})
     } catch (error) {
       return response.json({message: error.message})
     }

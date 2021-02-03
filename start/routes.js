@@ -29,4 +29,4 @@ Route.get('/logout', 'UserController.logout')
 Route.resource('/users', 'UserController')
 
 // Clients Crud
-Route.resource('/clients', 'ClientController')
+Route.resource('/clients', 'ClientController').middleware('auth')

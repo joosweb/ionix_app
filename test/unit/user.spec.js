@@ -15,6 +15,7 @@ test('Iniciar Sesión y obtener el token',  async  ({ assert, client })  =>  {
   await User.create({
     username, email, password
   })
+    
   // crear una peticion post a la ruta login con el usuario
   const response =  await client.post('/login').send({
     email, password
